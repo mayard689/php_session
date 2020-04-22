@@ -1,5 +1,38 @@
+<?php session_start() ?>
 <?php require 'inc/data/products.php'; ?>
+
+<?php
+    if ($_SERVER['REQUEST_METHOD']=='GET') {
+
+        if (!empty($_GET['add_to_cart'])) {
+
+            if (empty($_SESSION['login'])) {
+                header('location: /login.php');
+            }
+
+            if(is_numeric($_GET['add_to_cart'])) {
+                $id=intval($_GET['add_to_cart']);
+                if (empty($_SESSION['cart'][$id])) {
+                    $_SESSION['cart'][$id]=1;
+                } else {
+                    $_SESSION['cart'][$id]++;
+                }
+            }
+        }
+
+        if (!empty($_GET['action'])) {
+            if(($_GET['action']=='deconnexion')) {
+                session_destroy();
+                session_unset();
+                unset($_SESSION['login']);
+            }
+        }
+
+    }
+?>
+
 <?php require 'inc/head.php'; ?>
+
 <section class="cookies container-fluid">
     <div class="row">
         <?php foreach ($catalog as $id => $cookie) { ?>
